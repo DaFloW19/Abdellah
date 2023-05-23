@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CSS Module 2 Assignment</title>
+	<style type="text/css">
+		section {
+			border: 5px solid black;
+			box-sizing: border-box;
+			float: left;
+			background-color: gray;
+			position: relative;
+		}
+		.first{
+			margin: 0px 0px 0px;
+  			padding: 15px;
+			width: 40%;
+			color: black;
+			border: 5px solid black;
+			float: right;
+			text-align: center;
+			font-size: 30px;
+			font-style: initial;
+			background-color: rgb(213 152 152);
+			border-top: 0;
+			border-right: 0;
+		}
+		.second{
+			margin: 0px 0px 0px;
+  			padding: 15px;
+			width: 40%;
+			color: black;
+			border: 5px solid black;
+			float: right;
+			text-align: center;
+			font-size: 30px;
+			font-style: initial;
+			background-color: rgb(193 69 67);
+			border-top: 0;
+			border-right: 0;
+			color: white;
+		}
+		.third{
+			margin: 0px 0px 0px;
+  			padding: 15px;
+			width: 40%;
+			color: black;
+			border: 5px solid black;
+			float: right;
+			text-align: center;
+			font-size: 30px;
+			font-style: initial;
+			background-color: rgb(229 209 152);
+			border-top: 0;
+			border-right: 0;
+		}
+		p {
+		  margin-top: 80px;
+		  margin-left: 10px;
+		  margin-right: 10px;
+		  font-size: 20px;
+		}
+		h1 {
+  			text-align: center;
+  			font-size: 50px;
+  			font-style: initial;
+		}
+		@media (min-width: 992px){
+			section	{
+				float: left;
+				margin: 10px;
+				width: 30%;
+			}
+		}
+		@media (min-width: 768px) and (max-width: 991px){
+			.two{
+				float: left;
+    			width: 47%;
+   				margin-right: 10px;
+    			margin-left: 10px;
+    			margin-bottom: 20px;
+			}
+			.one{
+				float: left;
+    			width: 97%;
+   				margin-right: 10px;
+    			margin-left: 10px;
+			}
+		}
+		@media (max-width: 767px){
+			section	{
+				width: 80%;
+				margin: 10px 40px 10px 70px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<h1>Menu</h1>
+	<section class="two">
+		<h1 class="first">Chicken</h1>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+	</section>
+	<section class="two">
+		<h1 class="second">Beef</h1>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+	</section>
+	<section class="one">
+		<h1 class="third">Sushi</h1>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+	</section>
+</body>
+</html>
