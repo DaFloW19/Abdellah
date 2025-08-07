@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airbnb - Gestion Automatique des Prix</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/static/css/dashboard.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="row">
+            <div class="col-12">
+                <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                    <div class="container-fluid">
+                        <span class="navbar-brand mb-0 h1">
+                            <i class="fas fa-chart-line me-2"></i>
+                            Airbnb - Gestion Automatique des Prix
+                        </span>
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-success me-3" id="status-badge">
+                                <i class="fas fa-circle me-1"></i>
+                                Surveillance Active
+                            </span>
+                            <button class="btn btn-outline-light btn-sm" onclick="forceUpdate()">
+                                <i class="fas fa-sync-alt me-1"></i>
+                                Actualiser
+                            </button>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Dashboard -->
+        <div class="row mt-4">
+            <!-- Cartes de résumé -->
+            <div class="col-md-3">
+                <div class="card bg-gradient-primary text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-white-50">Prix Actuel</h6>
+                                <h3 id="current-price">0€</h3>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-euro-sign fa-2x text-white-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card bg-gradient-success text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-white-50">Prix Recommandé</h6>
+                                <h3 id="recommended-price">0€</h3>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-target fa-2x text-white-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card bg-gradient-info text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-white-50">Moyenne Concurrents</h6>
+                                <h3 id="competitor-average">0€</h3>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-users fa-2x text-white-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card bg-gradient-warning text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-white-50">Variation</h6>
+                                <h3 id="price-change">0€</h3>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-chart-line fa-2x text-white-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Graphiques et détails -->
+        <div class="row mt-4">
+            <!-- Graphique des prix -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-chart-area me-2"></i>
+                            Évolution des Prix (30 derniers jours)
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="priceChart" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Détails de la recommandation -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-lightbulb me-2"></i>
+                            Recommandation Actuelle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Niveau de Confiance</span>
+                                <span id="confidence-value" class="fw-bold">0%</span>
+                            </div>
+                            <div class="progress mt-2">
+                                <div id="confidence-bar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Explication:</label>
+                            <p id="reasoning" class="text-muted small">En attente d'analyse...</p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Dernière mise à jour:</label>
+                            <p id="last-update" class="text-muted small">-</p>
+                        </div>
+
+                        <button class="btn btn-success w-100" onclick="updatePrice()">
+                            <i class="fas fa-check me-1"></i>
+                            Appliquer le Prix Recommandé
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analyse des concurrents -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-binoculars me-2"></i>
+                            Analyse Concurrentielle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Propriété</th>
+                                        <th>Prix/nuit</th>
+                                        <th>Note</th>
+                                        <th>Avis</th>
+                                        <th>Type</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="competitors-table">
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">
+                                            <i class="fas fa-spinner fa-spin me-2"></i>
+                                            Chargement des données concurrentielles...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistiques détaillées -->
+        <div class="row mt-4 mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-chart-pie me-2"></i>
+                            Distribution des Prix Concurrents
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="distributionChart" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-cogs me-2"></i>
+                            Paramètres du Système
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Mise à jour automatique</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="autoUpdate" checked>
+                                <label class="form-check-label" for="autoUpdate">
+                                    Activer les mises à jour automatiques
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="confidenceThreshold" class="form-label">Seuil de confiance minimum</label>
+                            <input type="range" class="form-range" id="confidenceThreshold" min="0" max="100" value="70">
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted">0%</small>
+                                <small class="text-muted">100%</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="updateInterval" class="form-label">Intervalle de mise à jour (minutes)</label>
+                            <select class="form-select" id="updateInterval">
+                                <option value="15">15 minutes</option>
+                                <option value="30" selected>30 minutes</option>
+                                <option value="60">1 heure</option>
+                                <option value="180">3 heures</option>
+                                <option value="360">6 heures</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-primary w-100" onclick="saveSettings()">
+                            <i class="fas fa-save me-1"></i>
+                            Sauvegarder les Paramètres
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
